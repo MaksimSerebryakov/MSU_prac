@@ -2,6 +2,8 @@ import sys
 
 import lib.matrix_work 
 
+from scipy.optimize import linprog
+
 def input_matrix():
     print('Input source data:')
     try:
@@ -25,5 +27,20 @@ def input_matrix():
 
     return m, n, matrix
 
-m, n, matrix = input_matrix()
+def input_matrix_from_file(f_name):
+    f = open(f_name, 'r')
 
+    matrix = []
+
+    for line in f:
+        row = line.split()
+
+        matrix.append([float(j) for j in row])
+
+    return len(matrix), len(matrix[0]), matrix
+
+matrix = [[4, 0, 6, 2, 2, 1], [3, 8, 4, 10, 4, 4], [1, 2, 6, 5, 0, 0], [6, 6, 4, 4, 10, 3], [10, 4, 6, 4, 0, 9], [10, 7, 0, 7, 9, 8]]
+
+f, p, q = lib.matrix_work.simplex_method(matrix)
+
+print(f, p, q, sep='\n')
