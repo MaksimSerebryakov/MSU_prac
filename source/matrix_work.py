@@ -14,24 +14,6 @@ def saddle_point(a):
         
     return None, None
 
-def is_any_dominated_strategies(a):
-    a = np.array(a)
-
-    m = len(a)
-    n = len(a[0])
-
-    for i in range(m):
-        for j in range(i + 1, m):
-            if np.all(a[i] >= a[j]) or np.all(a[i] <= a[j]):
-                return True
-
-    for i in range(n):
-        for j in range(i + 1, n):
-            if np.all(a[:, i] >= a[:, j]) or np.all(a[:, i] <= a[:, j]):
-                return True
-    
-    return False
-
 def simplex_method(a):
     second = np.array(a)
     first = np.copy(np.transpose(second))

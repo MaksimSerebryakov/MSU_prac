@@ -1,6 +1,8 @@
 import sys
 
-import lib.matrix_work 
+from . import matrix_work
+import numpy as np
+import matplotlib.pyplot as plt
 
 from scipy.optimize import linprog
 
@@ -25,22 +27,55 @@ def input_matrix():
         print('Wrong number of column')
         sys.exit()
 
-    return m, n, matrix
+    return matrix
 
 def input_matrix_from_file(f_name):
-    f = open(f_name, 'r')
+    matrix = np.loadtxt(f_name)
+    n = len(matrix[0])
+    m = len(matrix)
 
-    matrix = []
+    try:
+        for i in range(1, m):
+            assert len(matrix[i]) == n
+    except AssertionError:
+        print('Wrong matrix shape')
+        sys.exit()
 
-    for line in f:
-        row = line.split()
+    return matrix
 
-        matrix.append([float(j) for j in row])
+def nash_equilibrium(a):
+    a = np.array(a)
+    i, j = matrix_work.saddle_point(a)
+    if i != None:
+        print("There is a solution in pure strategies for both players:")
+        print("Optimal strategy for the 1st player: ", end='')
+        print([*a[i]])
+        print("Optimal strategy for the 2nd player: ", end='')
+        print([*a[:, j]])
+        print("Game value: {}".format(a[i][j]))
+        return a[i][j], a[i], a[:, j]
 
-    return len(matrix), len(matrix[0]), matrix
+    try:    
+        target_f, p, q = matrix_work.simplex_method(a)
 
-matrix = [[4, 0, 6, 2, 2, 1], [3, 8, 4, 10, 4, 4], [1, 2, 6, 5, 0, 0], [6, 6, 4, 4, 10, 3], [10, 4, 6, 4, 0, 9], [10, 7, 0, 7, 9, 8]]
+        assert target_f != None
+    except AssertionError:
+        print("Simplex method didn't succeed to find an optimal solution")
+        sys.exit()
+    
+    print("There is a solution in mixed strategies: ")
+    print("Optimal strategy for the 1st player: ", end='')
+    print([*p])
+    print("Optimal strategy for the 2nd player: ", end='')
+    print([*q])
+    print("Game value: {}".format(target_f))
 
-f, p, q = lib.matrix_work.simplex_method(matrix)
+    return target_f, p, q
 
-print(f, p, q, sep='\n')
+def vizualization(p, num):
+    plt.title("Визуализация вектора оптимальной стратегии {}-го игрока".format(num))
+    x = np.linspace(1, len(p), num=len(p)) 
+    plt.axis([0, len(p) + 1, 0, max(p) + 1/2]) 
+    plt.style.use('ggplot')
+    plt.stem(x, p, basefmt=' ')
+    plt.show()
