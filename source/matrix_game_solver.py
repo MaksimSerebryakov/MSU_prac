@@ -65,10 +65,11 @@ def nash_equilibrium(a):
     
     print("There is a solution in mixed strategies: ")
     print("Optimal strategy for the 1st player: ", end='')
-    print([*p])
+    print_strategy(p)
     print("Optimal strategy for the 2nd player: ", end='')
-    print([*q])
-    print("Game value: {}".format(target_f))
+    print_strategy(q)
+    print("Game value: ", end='')
+    print("%.4f" %target_f)
 
     return target_f, p, q
 
@@ -79,3 +80,9 @@ def vizualization(p, num):
     plt.style.use('ggplot')
     plt.stem(x, p, basefmt=' ')
     plt.show()
+
+def print_strategy(p):
+    print('[', end=' ')
+    for s in p:
+        print("%.4f" %s, end=' ')
+    print(']')

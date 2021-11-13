@@ -15,7 +15,11 @@ def saddle_point(a):
     return None, None
 
 def simplex_method(a):
-    second = np.array(a)
+    a = np.array(a)
+    min_el = min(0, np.min(a))
+    a += abs(min_el)
+
+    second = a
     first = np.copy(np.transpose(second))
 
     m = len(a)
@@ -35,6 +39,7 @@ def simplex_method(a):
         target_f = 1 / res_first.fun
         P = np.array(res_first.x) * target_f
         Q = np.array(res_second.x) * target_f
+        target_f -= abs(min_el)
 
         return target_f, P, Q
     else:
