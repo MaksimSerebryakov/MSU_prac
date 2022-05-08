@@ -1,16 +1,18 @@
-import func
-import plots
+import src.func as func
+import src.plots as plots
 
 def main():
     data = func.read_data()
-    func.total_sword_number(data)
 
-    total_sword_plot = plots.my_plot('Total swords and defects')
+    func.make_plot_sum(data)
+    func.defects_monthly(data)
+    func.life_time(data)
 
 if __name__ == '__main__':
-    try:
-        main()
-    except Exception as ex:
-        print(ex)
-    else:
-        print('\nSUCCESS\n')
+    # try:
+    #     main()
+    # except Exception as ex:
+    #     print(ex)
+    # else:
+    #     print('\nSUCCESS\n')
+    main()
