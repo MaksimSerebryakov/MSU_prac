@@ -18,5 +18,9 @@ print(res.x)"""
 if __name__ == "__main__":
     print('Please, edit file "src/parameters.py according to your problem"')
     print()
-    
-    solve.main_algorithm()
+    try:
+        solution = solve.main_algorithm()
+    except:
+        print('An error occured, check or chenge parameters')
+    else:
+        print('The solution according to eps accuracy is:', solution[0], '\nFunciton value is:', solution[1])
