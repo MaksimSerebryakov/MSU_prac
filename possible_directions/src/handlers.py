@@ -1,8 +1,4 @@
-from xmlrpc.client import Boolean
 from .parameters import *
-def print_smth():
-    print(f(x0))
-    print(g_grad[1][0](x0), g_grad[1][1])
 
 def check_start_point():
     for rest in g:

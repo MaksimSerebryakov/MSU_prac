@@ -1,7 +1,6 @@
 import numpy as np
 
 from scipy import optimize
-from torch import alpha_dropout
 from .handlers import *
 from math import *
 
@@ -27,7 +26,7 @@ def main_algorithm():
         print("Start point belongs to scope of permissible values")
     else:
         print('x0 does not belong to scope of permissible values')
-        return None
+        raise Exception
     
     x_prev = x0
     x_cur = [x + eps*10 for x in x0]
@@ -63,13 +62,14 @@ def main_algorithm():
         lpp = linear_prog_problem(grad_f_x_prev, grad_g_x_prev)
         res = lpp.solve_lpp()
         if res.status != 0:
-            return x_prev
+            return x_prev + alpha_step, f(x_prev + alpha_step)
         elif res.x[-1] < 0:
-            return x_prev
+            return x_prev + alpha_step, f(x_prev + alpha_step)
         else:
             d_vec = np.array(res.x[0:-1])
-            # We should solve g(a) inequation so I'm going check all alpha values from 0 to alpha bound
-            alpha_step = 0.001
+            # We should solve g(a) inequation so I'm going check 
+            # all alpha values from 0 to alpha bound
+            alpha_step = 0.00001
             alpha = 1000000000000000
 
             for elem in g:
@@ -88,4 +88,5 @@ def main_algorithm():
             x_cur = np.array(x_prev) + d_vec*alpha
 
             if points_dist(x_cur, x_prev) < eps:
+                print(x_cur)
                 return x_cur, f(x_cur)
